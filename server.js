@@ -50,11 +50,11 @@ app.get("/scrape", function(req, res) {
     result.link = $(this).attr("href");
 
 
-    // Create a new Article using the `result` object built from scraping
-    db.Article.create(result)
-    .then(function(dbArticle) {
+    // Create a new Question using the `result` object built from scraping
+    db.Question.create(result)
+    .then(function(dbQuestion) {
       // View the added result in the console
-      console.log(dbArticle);
+      console.log(dbQuestion);
     })
     .catch(function(err) {
       // If an error occurred, send it to the client
@@ -62,19 +62,19 @@ app.get("/scrape", function(req, res) {
     });
 
   
-    // If we were able to successfully scrape and save an Article, send a message to the client
+    // If we were able to successfully scrape and save an Question, send a message to the client
     res.send("Hey!!! You were able to sucessfully scrape!!!");
   });
 });
 });
 
-// Route for getting all Articles from the db
-app.get("/articles", function(req, res) {
-  // Grab every document in the Articles collection
-  db.Article.find({})
-    .then(function(dbArticle) {
-      // If we were able to successfully find Articles, send them back to the client
-      res.json(dbArticle);
+// Route for getting all Questions from the db
+app.get("/Questions", function(req, res) {
+  // Grab every document in the Questions collection
+  db.Question.find({})
+    .then(function(dbQuestion) {
+      // If we were able to successfully find Questions, send them back to the client
+      res.json(dbQuestion);
     })
     .catch(function(err) {
       // If an error occurred, send it to the client
@@ -82,15 +82,15 @@ app.get("/articles", function(req, res) {
     });
 });
 
-// Route for grabbing a specific Article by id, populate it with it's note
-app.get("/articles/:id", function(req, res) {
+// Route for grabbing a specific Question by id, populate it with it's note
+app.get("/Questions/:id", function(req, res) {
   // Using the id passed in the id parameter, prepare a query that finds the matching one in our db...
-  db.Article.findOne({ _id: req.params.id })
+  db.Question.findOne({ _id: req.params.id })
     // ..and populate all of the notes associated with it
     .populate("note")
-    .then(function(dbArticle) {
-      // If we were able to successfully find an Article with the given id, send it back to the client
-      res.json(dbArticle);
+    .then(function(dbQuestion) {
+      // If we were able to successfully find an Question with the given id, send it back to the client
+      res.json(dbQuestion);
     })
     .catch(function(err) {
       // If an error occurred, send it to the client
@@ -98,19 +98,19 @@ app.get("/articles/:id", function(req, res) {
     });
 });
 
-// Route for saving/updating an Article's associated Note
-app.post("/articles/:id", function(req, res) {
+// Route for saving/updating an Question's associated Note
+app.post("/Questions/:id", function(req, res) {
   // Create a new note and pass the req.body to the entry
   db.Note.create(req.body)
     .then(function(dbNote) {
-      // If a Note was created successfully, find one Article with an `_id` equal to `req.params.id`. Update the Article to be associated with the new Note
+      // If a Note was created successfully, find one Question with an `_id` equal to `req.params.id`. Update the Question to be associated with the new Note
       // { new: true } tells the query that we want it to return the updated User -- it returns the original by default
       // Since our mongoose query returns a promise, we can chain another `.then` which receives the result of the query
-      return db.Article.findOneAndUpdate({ _id: req.params.id }, { note: dbNote._id }, { new: true });
+      return db.Question.findOneAndUpdate({ _id: req.params.id }, { note: dbNote._id }, { new: true });
     })
-    .then(function(dbArticle) {
-      // If we were able to successfully update an Article, send it back to the client
-      res.json(dbArticle);
+    .then(function(dbQuestion) {
+      // If we were able to successfully update an Question, send it back to the client
+      res.json(dbQuestion);
     })
     .catch(function(err) {
       // If an error occurred, send it to the client
