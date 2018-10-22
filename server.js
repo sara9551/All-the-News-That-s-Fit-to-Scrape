@@ -28,23 +28,24 @@ var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/mongoHeadlines
 mongoose.connect(MONGODB_URI);
 
 // A GET route for scraping the website
-app.get("/scrape", function(req, res) {
-  // First, we grab the body of the chosen website, in my case stackoverflow, with axios
+app.get("/scrape", function(_req, res) {
   
-  axios.get("https://stackoverflow.com/").then(function(response) {
+  // First, we grab the body of the chosen website, in my case stackoverflow, with axios
+  axios.get("http://www.latimes.com/").then(function(response) {
 
   // Load the HTML into cheerio and save it to a variable
   var $ = cheerio.load(response.data);
 
-  // An empty array to save the data that we'll scrape
+  $("article h5").each(function(i, element) {
+
+     // An empty array to save the data that we'll scrape
   var result = {};
 
-  $("a.question-hyperlink").each(function(i, element) {
-
     // Select each element in the HTML body from which you want information
-    result.title = $(this).text();
-    result.link = $(this).attr("href");
-
+    result.title = $(this).children("a")
+    .text();
+    result.link = $(this) .children("a")
+    .attr("href");
 
     // Create a new Question using the `result` object built from scraping
     db.Question.create(result)
