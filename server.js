@@ -41,7 +41,7 @@ app.get("/scrape", function(req, res) {
   // An empty array to save the data that we'll scrape
   var result = {};
 
-  // Select each element in the HTML body from which you want information.
+  // Select each element in the HTML body from which you want information
   // NOTE: Cheerio selectors function similarly to jQuery's selectors,
   // but be sure to visit the package's npm page to see how it works
   $("a.question-hyperlink").each(function(i, element) {
